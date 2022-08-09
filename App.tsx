@@ -13,26 +13,20 @@ import 'react-native-gesture-handler';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Home from './src/components/Home';
-
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import {StoreContext, store} from './src/store/RootStore';
 
 const Stack = createStackNavigator();
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="Home"
-        screenOptions={{headerShown: false}}>
-        <Stack.Screen name="home" component={Home} />
-      </Stack.Navigator>
+      <StoreContext.Provider value={store}>
+        <Stack.Navigator
+          initialRouteName="Home"
+          screenOptions={{headerShown: false}}>
+          <Stack.Screen name="home" component={Home} />
+        </Stack.Navigator>
+      </StoreContext.Provider>
     </NavigationContainer>
   );
 };
