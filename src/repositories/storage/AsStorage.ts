@@ -23,9 +23,8 @@ class AsStorage {
     mapper?: StorageMapper<T>,
   ): Promise<T | string | null> {
     const item = await this.storage.getItem(key);
-    if (mapper) {
-      const jsonObj = item != null ? JSON.parse(item) : '';
-      return mapper.fromJson(jsonObj);
+    if (item && mapper) {
+      return mapper.fromJson(item);
     }
     return item;
   }
@@ -46,6 +45,10 @@ class AsStorage {
       return result;
     }
     return items;
+  }
+
+  async clear(): Promise<void> {
+    return await this.storage.clear();
   }
 }
 

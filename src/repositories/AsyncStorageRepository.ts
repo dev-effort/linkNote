@@ -12,12 +12,12 @@ class AsyncStorageRepository implements Repository {
     }
   }
 
-  async getFolder(): Promise<FolderModel> {
+  async getFolder(key: string): Promise<FolderModel | null> {
     try {
       return (await AsStorage.get<FolderModel>(
-        'Folders',
+        key,
         FolderModelMapper,
-      )) as FolderModel;
+      )) as FolderModel | null;
     } catch {
       throw Error('Fail get Folder from asyncStorage');
     }
@@ -39,6 +39,14 @@ class AsyncStorageRepository implements Repository {
       return await AsStorage.getAllKeys();
     } catch {
       throw Error('Fail get FolderIds from asyncStorage');
+    }
+  }
+
+  async clearStorage(): Promise<void> {
+    try {
+      return await AsStorage.clear();
+    } catch {
+      throw Error('Fail delete all Folders');
     }
   }
 }

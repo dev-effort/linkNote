@@ -1,38 +1,21 @@
 import React, {useState} from 'react';
 import styled from 'styled-components/native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {TouchableOpacity} from 'react-native';
 import {useStore} from '../store/RootStore';
 
 interface Props {
-  isNew: boolean;
   folderName?: string;
   id?: string;
 }
 
-const Folder = ({isNew, folderName, id}: Props) => {
-  const {noteStore} = useStore();
+const Folder = ({folderName, id}: Props) => {
+  const {noteStore, uiStore} = useStore();
   const [folderId] = useState(id);
 
-  const handlePressFolder = async () => {
-    console.log(folderId);
-    if (isNew) {
-      console.log('press');
-      await noteStore.addFolder('hello');
-    }
-  };
-
   return (
-    <TouchableOpacity onPress={handlePressFolder}>
+    <TouchableOpacity>
       <Wrapper>
-        {isNew ? (
-          <>
-            <Icon name="plus" size={50} />
-            <NameText>New Group</NameText>
-          </>
-        ) : (
-          <NameText>{folderName}</NameText>
-        )}
+        <NameText>{folderName}</NameText>
       </Wrapper>
     </TouchableOpacity>
   );

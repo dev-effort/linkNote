@@ -8,16 +8,26 @@
  * @format
  */
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import 'react-native-gesture-handler';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Home from './src/components/Home';
-import {StoreContext, store} from './src/store/RootStore';
+import {StoreContext, store, useStore} from './src/store/RootStore';
 
 const Stack = createStackNavigator();
 
 const App = () => {
+  const {noteStore} = useStore();
+
+  useEffect(() => {
+    const init = async () => {
+      await noteStore.init();
+    };
+    init();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <NavigationContainer>
       <StoreContext.Provider value={store}>
