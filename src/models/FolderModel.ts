@@ -8,19 +8,22 @@ class FolderModel {
 
   private _name: string;
 
-  private _notes: Map<symbol, NoteModel>;
+  private _notes: Map<string, NoteModel>;
 
-  constructor(name: string, id?: string, notes?: Map<symbol, NoteModel>) {
+  constructor(name: string, id?: string, notes?: [string, NoteModel][]) {
     this._name = name;
     if (id) {
       this._id = id;
     } else {
       this._id = uuidv1();
     }
-    if (notes) {
-      this._notes = notes;
+    if (notes?.length !== 0) {
+      this._notes = new Map<string, NoteModel>();
+      notes?.forEach(note => {
+        this._notes.set(note[0], note[1]);
+      });
     } else {
-      this._notes = new Map<symbol, NoteModel>();
+      this._notes = new Map<string, NoteModel>();
     }
     makeAutoObservable<FolderModel>(this);
   }
@@ -35,6 +38,11 @@ class FolderModel {
 
   get notes(): NoteModel[] {
     return [...this._notes.values()];
+  }
+
+  addNote(note: NoteModel) {
+    console.log('note', this._notes);
+    this._notes.set(note.id, note);
   }
 }
 

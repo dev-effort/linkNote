@@ -7,6 +7,7 @@ import NewBox from './NewBox';
 import Folder from './Folder';
 import {useStore} from '../store/RootStore';
 import {observer} from 'mobx-react-lite';
+import Note from './Note';
 
 const Home = () => {
   const {noteStore} = useStore();
@@ -28,7 +29,7 @@ const Home = () => {
       <NewWapper>
         <NewBox type="FOLDER" />
       </NewWapper>
-      <FolderWrapper>
+      <ContentWrapper>
         <FlatList
           horizontal={true}
           data={noteStore.folders}
@@ -42,10 +43,20 @@ const Home = () => {
             </FolderStyle>
           )}
         />
-      </FolderWrapper>
+      </ContentWrapper>
       <NewWapper>
         <NewBox type="NOTE" />
       </NewWapper>
+      <ContentWrapper2>
+        <FlatList
+          data={noteStore?.notesInDefault}
+          renderItem={item => (
+            <NoteStyle>
+              <Note note={item.item} />
+            </NoteStyle>
+          )}
+        />
+      </ContentWrapper2>
     </Wrapper>
   );
 };
@@ -60,7 +71,7 @@ const NewWapper = styled.View`
   margin: 30px auto 0 auto;
 `;
 
-const FolderWrapper = styled.View`
+const ContentWrapper = styled.View`
   flex-direction: row;
   flex-wrap: wrap;
   height: 140px;
@@ -71,9 +82,25 @@ const FolderWrapper = styled.View`
   padding: 15px;
 `;
 
+const ContentWrapper2 = styled.View`
+  flex-direction: column;
+  flex-wrap: wrap;
+  height: 300px;
+  width: 350px;
+  background-color: #a5db27;
+  margin: 10px auto;
+  border-radius: 10px;
+  padding: 15px;
+`;
+
 const FolderStyle = styled.View`
   flex-basis: auto;
   margin: 7px 0 0 7px;
+`;
+
+const NoteStyle = styled.View`
+  flex-basis: auto;
+  margin: 7px 0 0 0;
 `;
 
 export default observer(Home);

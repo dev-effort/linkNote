@@ -1,10 +1,12 @@
 import React, {useState} from 'react';
 import styled from 'styled-components/native';
-import {Modal, Text, TouchableOpacity} from 'react-native';
+import {Modal, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {NewType} from './types';
 import {useStore} from '../store/RootStore';
 import {observer} from 'mobx-react-lite';
+import {AppBar} from '@react-native-material/core';
+import {Picker} from '@react-native-picker/picker';
 
 interface Props {
   type: NewType;
@@ -13,6 +15,22 @@ interface Props {
 const NewBox = ({type}: Props) => {
   const {noteStore, uiStore} = useStore();
   const [newFolderName, setNewFolderName] = useState<string>('');
+  const [title, setTitle] = useState<string>('');
+  const [link, setLink] = useState<string>('');
+  const [body, setBody] = useState<string>('');
+  const [selectedFolder, setSelectedFolder] = useState<string>(
+    noteStore.defaultId,
+  );
+  const [isVisibleNewNoteModal, setIsVisibleNewNoteModal] =
+    useState<boolean>(false);
+
+  const openNewNoteModal = () => {
+    setIsVisibleNewNoteModal(true);
+  };
+
+  const closeNewNoteModal = () => {
+    setIsVisibleNewNoteModal(false);
+  };
 
   const newContent = () => {
     if (type == 'FOLDER') {
@@ -27,6 +45,8 @@ const NewBox = ({type}: Props) => {
   const handlePressNewBox = () => {
     if (type == 'FOLDER') {
       uiStore.openNewFolderModal();
+    } else if (type == 'NOTE') {
+      openNewNoteModal();
     }
   };
 
@@ -34,6 +54,15 @@ const NewBox = ({type}: Props) => {
     await noteStore.addFolder(newFolderName);
     setNewFolderName('');
     uiStore.closeNewFolderModal();
+  };
+
+  const handlePressNewNoteBtn = () => {
+    noteStore.addNote({
+      title: title,
+      link: link,
+      body: body,
+      folderId: selectedFolder,
+    });
   };
 
   return (
@@ -51,7 +80,7 @@ const NewBox = ({type}: Props) => {
         onRequestClose={() => uiStore.closeNewFolderModal()}>
         <CenteredView>
           <NewFolderWrapper>
-            <NewFolderNameTextInput
+            <StyledTextInput
               value={newFolderName}
               autoFocus={true}
               placeholder="folder name"
@@ -67,6 +96,58 @@ const NewBox = ({type}: Props) => {
             </NewFolderBtnWrapper>
           </NewFolderWrapper>
         </CenteredView>
+      </Modal>
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={isVisibleNewNoteModal}
+        onRequestClose={() => closeNewNoteModal()}>
+        <AppBar
+          title="Link Note"
+          trailing={
+            <TouchableOpacity onPress={handlePressNewNoteBtn}>
+              <View>
+                <Text style={{color: 'white'}}>저장</Text>
+              </View>
+            </TouchableOpacity>
+          }
+        />
+        <Picker
+          selectedValue={selectedFolder}
+          onValueChange={itemValue => {
+            console.log(itemValue);
+            setSelectedFolder(itemValue);
+          }}>
+          {noteStore.folders.map(folder => {
+            return (
+              <Picker.Item
+                key={folder.id}
+                label={folder.name}
+                value={folder.id}
+              />
+            );
+          })}
+        </Picker>
+        <CenteredNoteView>
+          <StyledTextInput
+            value={title}
+            autoFocus={true}
+            placeholder="title"
+            onChangeText={(text: string) => setTitle(text)}
+          />
+          <StyledTextInput
+            value={link}
+            autoFocus={false}
+            placeholder="link"
+            onChangeText={(text: string) => setLink(text)}
+          />
+          <BodyContentInput
+            value={body}
+            autoFocus={false}
+            placeholder="body"
+            onChangeText={(text: string) => setBody(text)}
+          />
+        </CenteredNoteView>
       </Modal>
     </>
   );
@@ -94,6 +175,11 @@ const CenteredView = styled.View`
   align-items: center;
 `;
 
+const CenteredNoteView = styled.View`
+  flex: 1;
+  align-items: center;
+`;
+
 const NewFolderWrapper = styled.View`
   width: 300px;
   height: 135px;
@@ -102,9 +188,17 @@ const NewFolderWrapper = styled.View`
   align-items: center;
 `;
 
-const NewFolderNameTextInput = styled.TextInput`
+const StyledTextInput = styled.TextInput`
   width: 280px;
   height: 50px;
+  border: solid 1px;
+  border-radius: 15px;
+  margin: 10px 0 0 0;
+`;
+
+const BodyContentInput = styled.TextInput`
+  width: 280px;
+  height: 500px;
   border: solid 1px;
   border-radius: 15px;
   margin: 10px 0 0 0;

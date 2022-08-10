@@ -1,9 +1,13 @@
 import {makeAutoObservable, runInAction} from 'mobx';
 import FolderModel from '../models/FolderModel';
+import NoteModel from '../models/NoteModel';
 import AsyncStorageRepository from '../repositories/AsyncStorageRepository';
 import {Repository} from '../repositories/Repository';
+import {AddNoteType} from './types';
 
 class NoteStore {
+  private _defaultId = '00000000-0000-0000-0000-000000000000';
+
   private _folders: Map<string, FolderModel>;
 
   private repository: Repository;
@@ -15,14 +19,9 @@ class NoteStore {
   }
 
   async init() {
-    const defaultFolderKey = await this.repository.getFolder(
-      '00000000-0000-0000-0000-000000000000',
-    );
+    const defaultFolderKey = await this.repository.getFolder(this._defaultId);
     if (defaultFolderKey === null) {
-      const defaultFolder = new FolderModel(
-        'default',
-        '00000000-0000-0000-0000-000000000000',
-      );
+      const defaultFolder = new FolderModel('default', this._defaultId);
       await this.repository.setFolder(defaultFolder);
     }
 
@@ -47,12 +46,25 @@ class NoteStore {
     return [...this._folders.values()];
   }
 
+  get defaultId(): string {
+    return this._defaultId;
+  }
+
   async deleteAllFolders(): Promise<void> {
     const result = await this.repository.clearStorage();
     runInAction(() => {
       this._folders.clear();
     });
     return result;
+  }
+
+  addNote({title, link, body, folderId}: AddNoteType) {
+    const newNote = new NoteModel(title, link, body);
+    this._folders.get(folderId)?.addNote(newNote);
+  }
+
+  get notesInDefault(): NoteModel[] | undefined {
+    return this._folders.get(this.defaultId)?.notes;
   }
 }
 

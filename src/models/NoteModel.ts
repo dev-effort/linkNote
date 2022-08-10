@@ -1,7 +1,8 @@
 import {makeAutoObservable} from 'mobx';
+import {v1 as uuidv1} from 'uuid';
 
 class NoteModel {
-  private _id: symbol;
+  private _id: string;
 
   private _title: string;
 
@@ -10,14 +11,14 @@ class NoteModel {
   private _main?: string;
 
   constructor(title = 'No Title', link?: string, main?: string) {
-    this._id = Symbol(title);
+    this._id = uuidv1();
     this._title = title;
     this._link = link;
     this._main = main;
     makeAutoObservable<NoteModel>(this);
   }
 
-  get id(): symbol {
+  get id(): string {
     return this._id;
   }
 
