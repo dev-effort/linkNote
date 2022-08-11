@@ -1,9 +1,11 @@
 import FolderModel from '../models/FolderModel';
 
 export interface Repository {
-  setFolder(folders: FolderModel): Promise<void>;
+  setFolder(folder: FolderModel): Promise<void>;
 
   getFolder(key: string): Promise<FolderModel | null>;
+
+  putFolder(folder: FolderModel): Promise<void>;
 
   getFolders(keys: string[]): Promise<[string, FolderModel][]>;
 

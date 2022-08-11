@@ -1,26 +1,21 @@
 import React, {useState} from 'react';
 import styled from 'styled-components/native';
 import {Modal, Text, TouchableOpacity, View} from 'react-native';
+import {NewText, Wrapper} from './styles';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {NewType} from './types';
-import {useStore} from '../store/RootStore';
-import {observer} from 'mobx-react-lite';
+import {useStore} from '../../store/RootStore';
 import {AppBar} from '@react-native-material/core';
 import {Picker} from '@react-native-picker/picker';
 
-interface Props {
-  type: NewType;
-}
-
-const NewBox = ({type}: Props) => {
-  const {noteStore, uiStore} = useStore();
-  const [newFolderName, setNewFolderName] = useState<string>('');
+const NewNote = () => {
+  const {noteStore} = useStore();
   const [title, setTitle] = useState<string>('');
   const [link, setLink] = useState<string>('');
   const [body, setBody] = useState<string>('');
   const [selectedFolder, setSelectedFolder] = useState<string>(
     noteStore.defaultId,
   );
+
   const [isVisibleNewNoteModal, setIsVisibleNewNoteModal] =
     useState<boolean>(false);
 
@@ -32,31 +27,7 @@ const NewBox = ({type}: Props) => {
     setIsVisibleNewNoteModal(false);
   };
 
-  const newContent = () => {
-    if (type == 'FOLDER') {
-      return 'New Folder';
-    } else if (type == 'NOTE') {
-      return 'New Link Note';
-    } else {
-      throw Error('choose type NOTE, FOLDER');
-    }
-  };
-
-  const handlePressNewBox = () => {
-    if (type == 'FOLDER') {
-      uiStore.openNewFolderModal();
-    } else if (type == 'NOTE') {
-      openNewNoteModal();
-    }
-  };
-
-  const handlePressNewFolderConfirmBtn = async () => {
-    await noteStore.addFolder(newFolderName);
-    setNewFolderName('');
-    uiStore.closeNewFolderModal();
-  };
-
-  const handlePressNewNoteBtn = () => {
+  const handlePressNewNoteConfirmBtn = () => {
     noteStore.addNote({
       title: title,
       link: link,
@@ -66,38 +37,18 @@ const NewBox = ({type}: Props) => {
     closeNewNoteModal();
   };
 
+  const handlePressNewNoteBtn = () => {
+    openNewNoteModal();
+  };
+
   return (
     <>
-      <TouchableOpacity onPress={handlePressNewBox}>
+      <TouchableOpacity onPress={handlePressNewNoteBtn}>
         <Wrapper>
           <Icon name="plus" size={24} />
-          <NewText>{newContent()}</NewText>
+          <NewText>New Folder</NewText>
         </Wrapper>
       </TouchableOpacity>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={uiStore.isVisibleNewFolderModal}
-        onRequestClose={() => uiStore.closeNewFolderModal()}>
-        <CenteredView>
-          <NewFolderWrapper>
-            <StyledTextInput
-              value={newFolderName}
-              autoFocus={true}
-              placeholder="folder name"
-              onChangeText={(text: string) => setNewFolderName(text)}
-            />
-            <NewFolderBtnWrapper>
-              <NewFolderBtn onPress={() => uiStore.closeNewFolderModal()}>
-                <Text>취소</Text>
-              </NewFolderBtn>
-              <NewFolderBtn onPress={() => handlePressNewFolderConfirmBtn()}>
-                <Text>확인</Text>
-              </NewFolderBtn>
-            </NewFolderBtnWrapper>
-          </NewFolderWrapper>
-        </CenteredView>
-      </Modal>
       <Modal
         animationType="slide"
         transparent={false}
@@ -106,7 +57,7 @@ const NewBox = ({type}: Props) => {
         <AppBar
           title="Link Note"
           trailing={
-            <TouchableOpacity onPress={handlePressNewNoteBtn}>
+            <TouchableOpacity onPress={handlePressNewNoteConfirmBtn}>
               <View>
                 <Text style={{color: 'white'}}>저장</Text>
               </View>
@@ -153,38 +104,8 @@ const NewBox = ({type}: Props) => {
   );
 };
 
-const Wrapper = styled.View`
-  width: 350px;
-  height: 60px;
-  background-color: #a5db27;
-  border-radius: 10px;
-  align-items: center;
-  justify-content: center;
-  flex-direction: row;
-`;
-
-const NewText = styled.Text`
-  text-align: center;
-  font-size: 20px;
-  margin: 0 0 0 15px;
-`;
-
-const CenteredView = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-`;
-
 const CenteredNoteView = styled.View`
   flex: 1;
-  align-items: center;
-`;
-
-const NewFolderWrapper = styled.View`
-  width: 300px;
-  height: 135px;
-  background-color: white;
-  border-radius: 10px;
   align-items: center;
 `;
 
@@ -204,17 +125,4 @@ const BodyContentInput = styled.TextInput`
   margin: 10px 0 0 0;
 `;
 
-const NewFolderBtnWrapper = styled.View`
-  flex-direction: row;
-  padding: 10px;
-  margin: auto;
-`;
-
-const NewFolderBtn = styled.TouchableOpacity`
-  width: 70px;
-  height: 50px;
-  background-color: yellow;
-  margin: 0 20px 0 20px;
-`;
-
-export default observer(NewBox);
+export default NewNote;

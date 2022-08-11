@@ -10,8 +10,12 @@ class NoteModel {
 
   private _main?: string;
 
-  constructor(title = 'No Title', link?: string, main?: string) {
-    this._id = uuidv1();
+  constructor(title = 'No Title', link?: string, main?: string, id?: string) {
+    if (id) {
+      this._id = id;
+    } else {
+      this._id = uuidv1();
+    }
     this._title = title;
     this._link = link;
     this._main = main;

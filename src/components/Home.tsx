@@ -3,11 +3,12 @@ import styled from 'styled-components/native';
 import {FlatList} from 'react-native';
 import {AppBar, IconButton} from '@react-native-material/core';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import NewBox from './NewBox';
 import Folder from './Folder';
 import {useStore} from '../store/RootStore';
 import {observer} from 'mobx-react-lite';
 import Note from './Note';
+import NewFolder from './NewBox/NewFolder';
+import NewNote from './NewBox/NewNote';
 
 const Home = () => {
   const {noteStore} = useStore();
@@ -27,7 +28,7 @@ const Home = () => {
         title="Link Note"
       />
       <NewWapper>
-        <NewBox type="FOLDER" />
+        <NewFolder />
       </NewWapper>
       <ContentWrapper>
         <FlatList
@@ -45,7 +46,7 @@ const Home = () => {
         />
       </ContentWrapper>
       <NewWapper>
-        <NewBox type="NOTE" />
+        <NewNote />
       </NewWapper>
       <ContentWrapper2>
         <FlatList
@@ -62,7 +63,6 @@ const Home = () => {
 };
 
 const Wrapper = styled.View`
-  background-color: #6f27db;
   height: 100%;
 `;
 

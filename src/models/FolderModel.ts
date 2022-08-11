@@ -10,7 +10,7 @@ class FolderModel {
 
   private _notes: Map<string, NoteModel>;
 
-  constructor(name: string, id?: string, notes?: [string, NoteModel][]) {
+  constructor(name: string, id?: string, notes?: [string, any][]) {
     this._name = name;
     if (id) {
       this._id = id;
@@ -20,7 +20,13 @@ class FolderModel {
     if (notes?.length !== 0) {
       this._notes = new Map<string, NoteModel>();
       notes?.forEach(note => {
-        this._notes.set(note[0], note[1]);
+        const noteModel = new NoteModel(
+          note[1]._title,
+          note[1]._link,
+          note[1]._main,
+          note[1]._id,
+        );
+        this._notes.set(note[0], noteModel);
       });
     } else {
       this._notes = new Map<string, NoteModel>();

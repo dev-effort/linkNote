@@ -60,7 +60,9 @@ class NoteStore {
 
   addNote({title, link, body, folderId}: AddNoteType) {
     const newNote = new NoteModel(title, link, body);
-    this._folders.get(folderId)?.addNote(newNote);
+    const folder = this._folders.get(folderId) as FolderModel;
+    folder?.addNote(newNote);
+    this.repository.putFolder(folder);
   }
 
   get notesInDefault(): NoteModel[] | undefined {

@@ -4,11 +4,11 @@ import FolderModel from '../models/FolderModel';
 import FolderModelMapper from './storage/mapper/FolderModelMapper';
 
 class AsyncStorageRepository implements Repository {
-  async setFolder(folders: FolderModel): Promise<void> {
+  async setFolder(folder: FolderModel): Promise<void> {
     try {
-      return await AsStorage.set<FolderModel>(folders.id, folders);
+      return await AsStorage.set<FolderModel>(folder.id, folder);
     } catch {
-      throw Error('Fail save Folders to asyncStorage');
+      throw Error('Fail save Folder to asyncStorage');
     }
   }
 
@@ -20,6 +20,14 @@ class AsyncStorageRepository implements Repository {
       )) as FolderModel | null;
     } catch {
       throw Error('Fail get Folder from asyncStorage');
+    }
+  }
+
+  async putFolder(folder: FolderModel): Promise<void> {
+    try {
+      return await AsStorage.mergeItem<FolderModel>(folder.id, folder);
+    } catch {
+      throw Error('Fail update folder to asyncStorage');
     }
   }
 

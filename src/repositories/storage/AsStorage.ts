@@ -50,6 +50,16 @@ class AsStorage {
   async clear(): Promise<void> {
     return await this.storage.clear();
   }
+
+  async mergeItem<T>(key: string, value: T): Promise<void> {
+    if (typeof value === 'string') {
+      return await this.storage.mergeItem(key, value);
+    } else if (typeof value === 'object') {
+      return await this.storage.mergeItem(key, JSON.stringify(value));
+    } else {
+      throw Error('fail mergeItem caused value is not string or object');
+    }
+  }
 }
 
 export default new AsStorage();

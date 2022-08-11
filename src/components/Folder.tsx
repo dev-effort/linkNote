@@ -9,7 +9,7 @@ interface Props {
 }
 
 const Folder = ({folderName, id}: Props) => {
-  const {noteStore, uiStore} = useStore();
+  const {noteStore} = useStore();
   const [folderId] = useState(id);
 
   return (
