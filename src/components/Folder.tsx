@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import styled from 'styled-components/native';
 import {TouchableOpacity} from 'react-native';
 import {useStore} from '../store/RootStore';
+import Icon from 'react-native-vector-icons/Feather';
 
 interface Props {
   folderName?: string;
@@ -15,6 +16,7 @@ const Folder = ({folderName, id}: Props) => {
   return (
     <TouchableOpacity>
       <Wrapper>
+        <Icon name="folder" size={50} />
         <NameText>{folderName}</NameText>
       </Wrapper>
     </TouchableOpacity>
@@ -22,9 +24,9 @@ const Folder = ({folderName, id}: Props) => {
 };
 
 const Wrapper = styled.View`
-  width: 90px;
-  height: 90px;
-  background-color: #dbdb27;
+  width: 80px;
+  height: 80px;
+  background-color: #f7f087;
   flex-direction: column;
   align-items: center;
   justify-content: center;

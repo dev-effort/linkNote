@@ -51,7 +51,7 @@ const Note = ({note}: Props) => {
 const Wrapper = styled.View`
   width: 320px;
   height: 35px;
-  background-color: #dbdb27;
+  background-color: #f7f087;
   flex-direction: column;
   align-items: center;
   justify-content: center;

@@ -10,7 +10,15 @@ class NoteModel {
 
   private _main?: string;
 
-  constructor(title = 'No Title', link?: string, main?: string, id?: string) {
+  private _folderId: string;
+
+  constructor(
+    title = 'No Title',
+    folderId: string,
+    link?: string,
+    main?: string,
+    id?: string,
+  ) {
     if (id) {
       this._id = id;
     } else {
@@ -19,6 +27,7 @@ class NoteModel {
     this._title = title;
     this._link = link;
     this._main = main;
+    this._folderId = folderId;
     makeAutoObservable<NoteModel>(this);
   }
 
@@ -36,6 +45,10 @@ class NoteModel {
 
   get main(): string {
     return this._main || '';
+  }
+
+  get folderId(): string {
+    return this._folderId;
   }
 }
 

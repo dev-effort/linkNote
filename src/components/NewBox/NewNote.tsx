@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import styled from 'styled-components/native';
 import {Modal, Text, TouchableOpacity, View} from 'react-native';
-import {NewText, Wrapper} from './styles';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useStore} from '../../store/RootStore';
 import {AppBar} from '@react-native-material/core';
@@ -45,8 +44,7 @@ const NewNote = () => {
     <>
       <TouchableOpacity onPress={handlePressNewNoteBtn}>
         <Wrapper>
-          <Icon name="plus" size={24} />
-          <NewText>New Folder</NewText>
+          <Icon name="note-plus-outline" size={50} />
         </Wrapper>
       </TouchableOpacity>
       <Modal
@@ -103,6 +101,17 @@ const NewNote = () => {
     </>
   );
 };
+
+const Wrapper = styled.View`
+  width: 160px;
+  height: 60px;
+  background-color: #ffec64;
+  border-radius: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  margin: 0 0 0 30px;
+`;
 
 const CenteredNoteView = styled.View`
   flex: 1;

@@ -22,6 +22,7 @@ class FolderModel {
       notes?.forEach(note => {
         const noteModel = new NoteModel(
           note[1]._title,
+          note[1]._folderId,
           note[1]._link,
           note[1]._main,
           note[1]._id,
