@@ -41,7 +41,6 @@ class FolderModel {
   }
 
   addNote(note: NoteModel) {
-    console.log('note', this._notes);
     this._notes.set(note.id, note);
   }
 }

@@ -63,6 +63,7 @@ const NewBox = ({type}: Props) => {
       body: body,
       folderId: selectedFolder,
     });
+    closeNewNoteModal();
   };
 
   return (
@@ -115,7 +116,6 @@ const NewBox = ({type}: Props) => {
         <Picker
           selectedValue={selectedFolder}
           onValueChange={itemValue => {
-            console.log(itemValue);
             setSelectedFolder(itemValue);
           }}>
           {noteStore.folders.map(folder => {
